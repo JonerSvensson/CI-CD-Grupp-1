@@ -41,15 +41,15 @@ class BlogControllerTest {
     void setUp() {
         blog = new Blog(
                 1L,
-                "Min titel",
-                "Brödtext här",
+                "My title",
+                "Some body text",
                 "Anna",
                 LocalDateTime.now()
         );
     }
 
     @Test
-    @DisplayName("GET alla returnerar 200 och en lista")
+    @DisplayName("GET all returns 200 and a list")
     void getAll_returns200() throws Exception {
         when(blogService.findAll()).thenReturn(List.of(blog));
 
@@ -57,14 +57,14 @@ class BlogControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].title").value("Min titel"))
+                .andExpect(jsonPath("$[0].title").value("My title"))
                 .andExpect(jsonPath("$[0].author").value("Anna"));
 
         verify(blogService).findAll();
     }
 
     @Test
-    @DisplayName("GET alla returnerar 200 även när listan är tom")
+    @DisplayName("GET all returns 200 even when the list is empty")
     void getAll_emptyList_returns200() throws Exception {
         when(blogService.findAll()).thenReturn(List.of());
 
@@ -77,21 +77,21 @@ class BlogControllerTest {
     }
 
     @Test
-    @DisplayName("GET med id returnerar 200 när inlägget finns")
+    @DisplayName("GET by id returns 200 when the post exists")
     void getById_found_returns200() throws Exception {
         when(blogService.findById(1L)).thenReturn(blog);
 
         mockMvc.perform(get("/api/blogs/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.title").value("Min titel"))
+                .andExpect(jsonPath("$.title").value("My title"))
                 .andExpect(jsonPath("$.author").value("Anna"));
 
         verify(blogService).findById(1L);
     }
 
     @Test
-    @DisplayName("GET med id returnerar 404 när inlägget saknas")
+    @DisplayName("GET by id returns 404 when the post is missing")
     void getById_notFound_returns404() throws Exception {
         when(blogService.findById(99L))
                 .thenThrow(ResourceNotFoundException.blog(99L));
@@ -103,12 +103,12 @@ class BlogControllerTest {
     }
 
     @Test
-    @DisplayName("POST returnerar 201 och Location-header")
+    @DisplayName("POST returns 201 and a Location header")
     void create_valid_returns201() throws Exception {
         Blog input = new Blog(
                 null,
-                "Ny titel",
-                "Ny text",
+                "New title",
+                "New text",
                 "Bo",
                 null
         );
@@ -124,19 +124,19 @@ class BlogControllerTest {
                         endsWith("/api/blogs/1")
                 ))
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.title").value("Min titel"))
+                .andExpect(jsonPath("$.title").value("My title"))
                 .andExpect(jsonPath("$.author").value("Anna"));
 
         verify(blogService).create(any(Blog.class));
     }
 
     @Test
-    @DisplayName("POST med tom titel returnerar 400")
+    @DisplayName("POST with a blank title returns 400")
     void create_blankTitle_returns400() throws Exception {
         Blog invalid = new Blog(
                 null,
                 "",
-                "Ny text",
+                "New text",
                 "Bo",
                 null
         );
@@ -150,20 +150,20 @@ class BlogControllerTest {
     }
 
     @Test
-    @DisplayName("PUT returnerar 200 när inlägget finns")
+    @DisplayName("PUT returns 200 when the post exists")
     void update_found_returns200() throws Exception {
         Blog input = new Blog(
                 null,
-                "Uppdaterad",
-                "Ny text",
+                "Updated",
+                "New text",
                 "Anna",
                 null
         );
 
         Blog updatedBlog = new Blog(
                 1L,
-                "Uppdaterad",
-                "Ny text",
+                "Updated",
+                "New text",
                 "Anna",
                 LocalDateTime.now()
         );
@@ -176,20 +176,20 @@ class BlogControllerTest {
                         .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.title").value("Uppdaterad"))
-                .andExpect(jsonPath("$.body").value("Ny text"))
+                .andExpect(jsonPath("$.title").value("Updated"))
+                .andExpect(jsonPath("$.body").value("New text"))
                 .andExpect(jsonPath("$.author").value("Anna"));
 
         verify(blogService).update(eq(1L), any(Blog.class));
     }
 
     @Test
-    @DisplayName("PUT returnerar 404 när inlägget saknas")
+    @DisplayName("PUT returns 404 when the post is missing")
     void update_notFound_returns404() throws Exception {
         Blog input = new Blog(
                 null,
-                "Uppdaterad",
-                "Ny text",
+                "Updated",
+                "New text",
                 "Anna",
                 null
         );
@@ -206,12 +206,12 @@ class BlogControllerTest {
     }
 
     @Test
-    @DisplayName("PUT med tom titel returnerar 400 och anropar inte service")
+    @DisplayName("PUT with a blank title returns 400 and never calls the service")
     void update_blankTitle_returns400() throws Exception {
         Blog invalid = new Blog(
                 null,
                 "",
-                "Ny text",
+                "New text",
                 "Anna",
                 null
         );
@@ -226,7 +226,7 @@ class BlogControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE returnerar 204 utan body")
+    @DisplayName("DELETE returns 204 with no body")
     void delete_found_returns204() throws Exception {
         doNothing().when(blogService).delete(1L);
 
@@ -238,7 +238,7 @@ class BlogControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE returnerar 404 när inlägget saknas")
+    @DisplayName("DELETE returns 404 when the post is missing")
     void delete_notFound_returns404() throws Exception {
         doThrow(ResourceNotFoundException.blog(99L))
                 .when(blogService)

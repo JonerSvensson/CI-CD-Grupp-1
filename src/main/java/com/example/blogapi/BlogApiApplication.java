@@ -1,13 +1,11 @@
 package com.example.blogapi;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class BlogApiApplication {
-    static void main() {
-        IO.println(String.format("Hello and welcome!"));
-
-        for (int i = 1; i <= 5; i++) {
-
-            IO.println("i = " + i);
-        }
+    public static void main(String[] args) {
+        SpringApplication.run(BlogApiApplication.class, args);
     }
 }

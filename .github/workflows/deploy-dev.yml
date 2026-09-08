@@ -1,4 +1,4 @@
-name: Deploy to DockerHub
+name: Deploy to DockerHub and Render (dev)
 on:
   push:
     branches:
@@ -25,3 +25,5 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/grp1-ci-cd:dev
 
+      - name: Trigger deployment on Render (dev)
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_DEV }}

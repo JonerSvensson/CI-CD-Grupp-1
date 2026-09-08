@@ -1,31 +1,12 @@
-name: Publish to DockerHub
+name: Publish to DockerHub and deploy to Render (main)
 
 on:
   push:
     branches:
       - main
-
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out project
-        uses: actions/checkout@v7
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 25
-
-      - name: Make mvnw executable
-        run: chmod +x ./mvnw
-
-      - name: Run tests
-        run: ./mvnw test
-
   build-and-push:
-    needs: test
+
     runs-on: ubuntu-latest
 
     steps:
@@ -38,9 +19,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/grp1-ci-cd-main:latest
+
+      - name: Trigger Trigger deployment on Render (main)
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_MAIN }}

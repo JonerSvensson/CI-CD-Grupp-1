@@ -76,4 +76,19 @@ class BlogControllerTest {
 
         verify(blogService).findAll();
     }
+
+
+    @Test
+    @DisplayName("GET med id returnerar 200 när inlägget finns")
+    void getById_found_returns200() throws Exception {
+        when(blogService.findById(1L)).thenReturn(blog);
+
+        mockMvc.perform(get("/api/blogs/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.title").value("Min titel"))
+                .andExpect(jsonPath("$.author").value("Anna"));
+
+        verify(blogService).findById(1L);
+    }
 }

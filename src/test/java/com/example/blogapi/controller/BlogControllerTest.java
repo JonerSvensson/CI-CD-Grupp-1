@@ -91,4 +91,17 @@ class BlogControllerTest {
 
         verify(blogService).findById(1L);
     }
+
+
+    @Test
+    @DisplayName("GET med id returnerar 404 när inlägget saknas")
+    void getById_notFound_returns404() throws Exception {
+        when(blogService.findById(99L))
+                .thenThrow(ResourceNotFoundException.blog(99L));
+
+        mockMvc.perform(get("/api/blogs/99"))
+                .andExpect(status().isNotFound());
+
+        verify(blogService).findById(99L);
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.blogapi.service;
+package com.example.blogapi.Service;
 
 import com.example.blogapi.model.Blog;
 import com.example.blogapi.repository.BlogRepository;
@@ -10,7 +10,7 @@ public class BlogService {
     private final BlogRepository blogRepository;
 
     public BlogService(BlogRepository blogRepository){
-        this.blogRepository=blogRepository;
+        this.blogRepository = blogRepository;
     }
 
     public List<Blog> findAll(){
@@ -19,30 +19,28 @@ public class BlogService {
 
     public Blog findById(Long id){
         return blogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Blog post with id " + id + " not found"));
+                .orElseThrow(() -> ResourceNotFoundException.blog(id));
     }
 
     public Blog create(Blog blog){
         return blogRepository.save(blog);
     }
 
-    public Blog update(Long id,Blog updatedBlog){
+    public Blog update(Long id, Blog updatedBlog){
         Blog existing = blogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Blog post with id " + id + " not found"));
+                .orElseThrow(() -> ResourceNotFoundException.blog(id));
 
         existing.setTitle(updatedBlog.getTitle());
         existing.setBody(updatedBlog.getBody());
-        existing.getAuthor(updatedBlog.getAuthor());
+        existing.setAuthor(updatedBlog.getAuthor());
 
         return blogRepository.save(existing);
     }
 
     public void delete(Long id){
         Blog existing = blogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Blog post with id " + id + " not found"));
+                .orElseThrow(() -> ResourceNotFoundException.blog(id));
 
-        blogRepository.delete.existing;
+        blogRepository.delete(existing);
     }
-
-
 }

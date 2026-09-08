@@ -62,4 +62,18 @@ class BlogControllerTest {
 
         verify(blogService).findAll();
     }
+
+
+    @Test
+    @DisplayName("GET alla returnerar 200 även när listan är tom")
+    void getAll_emptyList_returns200() throws Exception {
+        when(blogService.findAll()).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/blogs"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+
+        verify(blogService).findAll();
+    }
 }

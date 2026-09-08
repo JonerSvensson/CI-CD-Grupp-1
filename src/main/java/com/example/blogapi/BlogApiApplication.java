@@ -1,7 +1,7 @@
-package org.example;
+package com.example.blogapi;
 
 
-public class Main {
+public class BlogApiApplication {
     static void main() {
         IO.println(String.format("Hello and welcome!"));
 

@@ -1,4 +1,4 @@
-package com.example.blogapi.Service;
+package com.example.blogapi.service;
 
 public class ResourceNotFoundException extends RuntimeException {
 

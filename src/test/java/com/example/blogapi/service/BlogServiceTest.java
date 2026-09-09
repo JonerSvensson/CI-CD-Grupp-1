@@ -71,7 +71,7 @@ public class BlogServiceTest {
         Blog updated = new Blog(1L, "New", "NewBody", "NewAuthor", LocalDateTime.now());
 
         when(blogRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(blogRepository.save(existing)).thenReturn(existing);
+        when(blogRepository.update(existing)).thenReturn(existing);
 
         Blog result = blogService.update(1L, updated);
 
@@ -95,7 +95,7 @@ public class BlogServiceTest {
 
         blogService.delete(1L);
 
-        verify(blogRepository, times(1)).delete(existing);
+        verify(blogRepository, times(1)).deleteById(id);
     }
 
     @Test

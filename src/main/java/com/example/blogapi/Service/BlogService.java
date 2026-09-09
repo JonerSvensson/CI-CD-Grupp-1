@@ -1,4 +1,4 @@
-package com.example.blogapi.Service;
+package com.example.blogapi.service;
 
 import com.example.blogapi.model.Blog;
 import com.example.blogapi.repository.BlogRepository;
@@ -33,14 +33,10 @@ public class BlogService {
         existing.setTitle(updatedBlog.getTitle());
         existing.setBody(updatedBlog.getBody());
         existing.setAuthor(updatedBlog.getAuthor());
-
-        return blogRepository.save(existing);
+        return blogRepository.update(existing);
     }
 
-    public void delete(Long id){
-        Blog existing = blogRepository.findById(id)
-                .orElseThrow(() -> ResourceNotFoundException.blog(id));
-
-        blogRepository.delete(existing);
+    public void delete(Long id) {
+        blogRepository.deleteById(id);
     }
 }

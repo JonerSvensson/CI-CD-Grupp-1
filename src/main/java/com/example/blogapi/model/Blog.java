@@ -6,16 +6,16 @@ public class Blog {
 
     private Long id;
     private String title;
-    private String content;
+    private String body;
     private String author;
     private LocalDateTime createdAt;
 
     public Blog() {
     }
 
-    public Blog(String title, String content, String author) {
+    public Blog(String title, String body, String author) {
         this.title = title;
-        this.content = content;
+        this.body = body;
         this.author = author;
         this.createdAt = LocalDateTime.now();
     }
@@ -37,12 +37,12 @@ public class Blog {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getBody() {
+        return body;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getAuthor() {

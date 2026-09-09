@@ -44,7 +44,7 @@ public class BlogRepository {
         Optional<Blog> existing = findById(id);
         existing.ifPresent(blog -> {
             blog.setTitle(updatedBlog.getTitle());
-            blog.setContent(updatedBlog.getContent());
+            blog.setBody(updatedBlog.getBody());
             blog.setAuthor(updatedBlog.getAuthor());
         });
         return existing;

@@ -1,7 +1,5 @@
 package com.example.blogapi.service;
 
-import com.example.blogapi.Service.BlogService;
-import com.example.blogapi.Service.ResourceNotFoundException;
 import com.example.blogapi.model.Blog;
 import com.example.blogapi.repository.BlogRepository;
 import org.junit.jupiter.api.BeforeEach;

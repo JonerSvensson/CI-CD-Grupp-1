@@ -41,6 +41,6 @@ public class BlogService {
         Blog existing = blogRepository.findById(id)
                 .orElseThrow(() -> ResourceNotFoundException.blog(id));
 
-        blogRepository.delete(existing);
+        blogRepository.deleteById(existing.getId());
     }
 }

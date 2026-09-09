@@ -29,14 +29,8 @@ public class BlogService {
     }
 
     public Blog update(Long id, Blog updatedBlog){
-        Blog existing = blogRepository.findById(id)
+        return blogRepository.update(id, updatedBlog)
                 .orElseThrow(() -> ResourceNotFoundException.blog(id));
-
-        existing.setTitle(updatedBlog.getTitle());
-        existing.setBody(updatedBlog.getBody());
-        existing.setAuthor(updatedBlog.getAuthor());
-
-        return blogRepository.save(existing);
     }
 
     public void delete(Long id){

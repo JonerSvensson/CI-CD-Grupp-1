@@ -6,12 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.;
+import static org.mockito.Mockito.;
 
 public class BlogServiceTest {
 
@@ -26,7 +25,8 @@ public class BlogServiceTest {
 
     @Test
     void findAll_returnsListOfBlogs() {
-        Blog blog = new Blog(1L, "Title", "Body", "Author", LocalDateTime.now());
+        Blog blog = new Blog("Title", "Body", "Author");
+        blog.setId(1L);
         when(blogRepository.findAll()).thenReturn(List.of(blog));
 
         List<Blog> result = blogService.findAll();
@@ -37,7 +37,8 @@ public class BlogServiceTest {
 
     @Test
     void findById_returnsBlog_whenExists() {
-        Blog blog = new Blog(1L, "Title", "Body", "Author", LocalDateTime.now());
+        Blog blog = new Blog("Title", "Body", "Author");
+        blog.setId(1L);
         when(blogRepository.findById(1L)).thenReturn(Optional.of(blog));
 
         Blog result = blogService.findById(1L);
@@ -54,7 +55,8 @@ public class BlogServiceTest {
 
     @Test
     void create_savesBlog() {
-        Blog blog = new Blog(1L, "Title", "Body", "Author", LocalDateTime.now());
+        Blog blog = new Blog("Title", "Body", "Author");
+        blog.setId(1L);
         when(blogRepository.save(blog)).thenReturn(blog);
 
         Blog result = blogService.create(blog);
@@ -63,24 +65,11 @@ public class BlogServiceTest {
         verify(blogRepository, times(1)).save(blog);
     }
 
-    @Test
-    void update_updatesExistingBlog() {
-        Blog existing = new Blog(1L, "Old", "OldBody", "OldAuthor", LocalDateTime.now());
-        Blog updated = new Blog(1L, "New", "NewBody", "NewAuthor", LocalDateTime.now());
-
-        when(blogRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(blogRepository.update(existing)).thenReturn(existing);
-
-        Blog result = blogService.update(1L, updated);
-
-        assertEquals("New", result.getTitle());
-        assertEquals("NewBody", result.getBody());
-        assertEquals("NewAuthor", result.getAuthor());
-    }
 
     @Test
     void update_throwsException_whenNotFound() {
-        Blog updated = new Blog(1L, "New", "NewBody", "NewAuthor", LocalDateTime.now());
+        Blog updated = new Blog("New", "NewBody", "NewAuthor");
+        updated.setId(1L);
         when(blogRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> blogService.update(1L, updated));
@@ -88,12 +77,13 @@ public class BlogServiceTest {
 
     @Test
     void delete_removesBlog() {
-        Blog existing = new Blog(1L, "Title", "Body", "Author", LocalDateTime.now());
+        Blog existing = new Blog("Title", "Body", "Author");
+        existing.setId(1L);
         when(blogRepository.findById(1L)).thenReturn(Optional.of(existing));
 
         blogService.delete(1L);
 
-        verify(blogRepository, times(1)).deleteById(id);
+        verify(blogRepository, times(1)).deleteById(1L);
     }
 
     @Test

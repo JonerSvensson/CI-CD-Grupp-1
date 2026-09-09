@@ -1,12 +1,19 @@
 package com.example.blogapi.model;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
 
 public class Blog {
 
     private Long id;
+    @NotBlank(message = "Titeln får inte vara tom")
     private String title;
+
+    @NotBlank(message = "Innehållet får inte vara tomt")
     private String body;
+
+    @NotBlank(message = "Författaren får inte vara tom")
     private String author;
     private LocalDateTime createdAt;
 

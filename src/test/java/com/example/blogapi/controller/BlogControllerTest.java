@@ -3,6 +3,8 @@ package com.example.blogapi.controller;
 import com.example.blogapi.model.Blog;
 import com.example.blogapi.service.BlogService;
 import com.example.blogapi.service.ResourceNotFoundException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,8 +13,9 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.RequestBody;
 import tools.jackson.databind.ObjectMapper;
-
+import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 import static org.hamcrest.Matchers.endsWith;
@@ -24,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(BlogController.class)
 class BlogControllerTest {
+    @NotNull
+    private String title;
 
     @Autowired
     private MockMvc mockMvc;
@@ -140,5 +145,71 @@ class BlogControllerTest {
 
         verify(blogService).update(eq(1L), any(Blog.class));
     }
+    @Test
+    @DisplayName("DELETE returns 204 when the post exists")
+    void delete_found_returns204() throws Exception {
+        doNothing().when(blogService).delete(1L);
 
+        mockMvc.perform(delete("/api/blogs/1"))
+                .andExpect(status().isNoContent());
+
+        verify(blogService).delete(1L);
+    }
+
+    @Test
+    @DisplayName("DELETE returns 404 when the post is missing")
+    void delete_notFound_returns404() throws Exception {
+        doThrow(ResourceNotFoundException.blog(99L))
+                .when(blogService).delete(99L);
+
+        mockMvc.perform(delete("/api/blogs/99"))
+                .andExpect(status().isNotFound());
+
+        verify(blogService).delete(99L);
+    }
+
+    @Test
+    @DisplayName("PUT returns 404 when the post is missing")
+    void update_notFound_returns404() throws Exception {
+        Blog input = new Blog("Updated", "New text", "Anna");
+
+        when(blogService.update(eq(99L), any(Blog.class)))
+                .thenThrow(ResourceNotFoundException.blog(99L));
+
+        mockMvc.perform(put("/api/blogs/99")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isNotFound());
+
+        verify(blogService).update(eq(99L), any(Blog.class));
+    }
+
+
+    @Test
+    @DisplayName("POST returns 400 when title is empty")
+    void create_emptyTitle_returns400() throws Exception {
+        Blog input = new Blog("", "Some body text", "Anna");
+
+        mockMvc.perform(post("/api/blogs")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Ogiltig indata"))
+                .andExpect(jsonPath("$.errors.title").exists());
+
+        verify(blogService, never()).create(any(Blog.class));
+    }
+    @Test
+    @DisplayName("POST returns 400 when required fields are missing")
+    void create_missingFields_returns400() throws Exception {
+        String json = "{}";
+
+        mockMvc.perform(post("/api/blogs")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Ogiltig indata"));
+
+        verify(blogService, never()).create(any(Blog.class));
+    }
 }

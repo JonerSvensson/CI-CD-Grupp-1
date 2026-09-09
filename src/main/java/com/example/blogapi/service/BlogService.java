@@ -33,10 +33,14 @@ public class BlogService {
         existing.setTitle(updatedBlog.getTitle());
         existing.setBody(updatedBlog.getBody());
         existing.setAuthor(updatedBlog.getAuthor());
-        return blogRepository.update(existing);
+
+        return blogRepository.save(existing);
     }
 
-    public void delete(Long id) {
-        blogRepository.deleteById(id);
+    public void delete(Long id){
+        Blog existing = blogRepository.findById(id)
+                .orElseThrow(() -> ResourceNotFoundException.blog(id));
+
+        blogRepository.delete(existing);
     }
 }

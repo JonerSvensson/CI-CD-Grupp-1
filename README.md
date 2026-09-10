@@ -1,8 +1,18 @@
 ﻿# Blog API CI/CD Grupparbete
 
+
+## Render
+
+- Dev: https://grp1-ci-cd-dev.onrender.com/api/blogs
+
+- Main: https://grp1-ci-cd-main.onrender.com/api/blogs
+
+ 
+
 ## 1. Projektets mål
 
 Vi ska bygga ett enkelt REST API med Java Spring Boot för att hantera blogginlägg.
+
 
 Projektet ska visa CI/CD flöde med:
 
